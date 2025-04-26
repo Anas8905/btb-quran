@@ -1,43 +1,56 @@
 <template>
 	<div class="min-h-screen bg-gradient-to-br from-sky-500 via-teal-400 to-blue-600 flex items-center justify-end px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-		<div class="absolute inset-0">
+		<div class="h-[800px] w-8/12 bg-white bg-opacity-80 shadow-2xl rounded-lg p-8 border-4 border-yellow-500 z-10 overflow-auto">
+			<h1 class="text-5xl font-bold text-center mb-12 text-yellow-700 border-b-2 border-yellow-500 pb-4">{{ surah.name }}</h1>
+			<div class="h-[600px] hide-scrollbar overflow-y-scroll overflow-x-hidden bg-white shadow-md rounded-lg p-8 border-t-4 border-yellow-500">
+				<div v-for="ayah in surah.ayahs" :key="ayah.number" class="ayah border-b border-light-gray transition-colors duration-500">
+					<AyahComponent @word-selected="handleWordSelected" :ayah="ayah" />
+				</div>
+			</div>
+		</div>
+    
+    <!-- animated background design -->
+    <div class="absolute inset-0">
 			<svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
 				<defs>
 					<path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
 				</defs>
-				<g class="parallax">
-					<use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.3)"></use>
-					<use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.2)"></use>
-					<use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.1)"></use>
-					<use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255,255,255,0.3)"></use>
-				</g>
+				<g class="parallax"> <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.3)"></use> <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.2)"></use> <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.1)"></use> <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255,255,255,0.3)"></use></g>
 			</svg>
 		</div>
-		<div class="w-8/12 bg-white bg-opacity-80 shadow-2xl rounded-lg p-8 border-4 border-yellow-500 relative z-10">
-			<h1 class="text-5xl font-bold text-center mb-12 text-yellow-700 border-b-2 border-yellow-500 pb-4">{{ surah.name }}</h1>
-			<div class="h-[675px] hide-scrollbar overflow-y-scroll overflow-x-hidden bg-white shadow-md rounded-lg p-8 border-t-4 border-yellow-500">
-				<div v-for="ayah in surah.ayahs" :key="ayah.number" class="ayah border-b border-light-gray transition-colors duration-500">
-					<AyahComponent :ayah="ayah" />
-				</div>
-			</div>
+
+		<!-- word explanation component -->
+		<div class="fixed top-2 left-8 h-[100%] w-full">
+			<WordExplainComponent v-show="showExplanationSection" :selectedWord="selectedWord" />
 		</div>
 	</div>
 </template>
 
 
 <script>
-import surahData from '@/quran-text/quran.json';
+import quranData from '@/quran-text/quran-complete.json';
 import AyahComponent from '@/components/AyahComponent.vue';
+import WordExplainComponent from '@/components/WordExplainComponent.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    AyahComponent
+    AyahComponent,
+    WordExplainComponent
   },
   data() {
     return {
-      surah: surahData.surahs[1]
+      surah: quranData.surahs[0], // Load the first Surah
+      selectedWord: null,
+      showExplanationSection: false
     };
+  },
+
+  methods: {
+    handleWordSelected(word) {
+      this.selectedWord = word;
+      this.showExplanationSection = true;
+    }
   }
 };
 </script>

@@ -8,18 +8,18 @@
 		  @mouseover="showTooltip(index)"
 		  @mouseleave="hideTooltip(index)"
 		  @click="addClickedWord(index)"
+		  @contextmenu.prevent="sendWordToExplain(word)"
 		>
 		  <span class="arabic">{{ word.arabic }}</span>
-		  <span class="block mt-1 text-sm translation">{{ word.urdu }}</span>
+		  <span class="block mt-1 translation">{{ word.urdu }}</span>
 		  <span class="tooltip" :class="{ 'show': activeIndices.includes(index) }">
 			{{ word.urdu }}
 			<span class="arrow"></span>
 		  </span>
 		</span>
-		<span class="text-gray-500 text-xl -mt-2" v-if="ayah.words.length > 0">۞</span>
 	  </div>
 	</div>
-  </template>
+</template>
   
   <script>
   export default {
@@ -64,7 +64,11 @@
 		  const alreadyClicked = this.clickedIndices.indexOf(index);
 		  this.clickedIndices.splice(alreadyClicked, 1);
 		}
-	  }
+	  },
+
+	sendWordToExplain(word) {
+		this.$emit('word-selected', word);
+	}
 	}
   };
   </script>
@@ -73,16 +77,19 @@
   .tooltip {
 	position: absolute;
 	left: 50%;
-	bottom: 4.5rem;
+	top: -2.5rem;
 	transform: translateX(-50%);
 	margin-bottom: 10px;
 	background: #ffffff;
 	color: #000000;
 	font-size: 18px;
+	font-weight: 600;
 	border-radius: 8px;
-	padding: 4px 12px;
+	padding: 10px 30px 16px 30px;
 	z-index: 99;
-	width: 200px;
+	width: max-content;
+	font-family: "Noto Nastaliq Urdu", serif;
+	word-spacing: 3px;
 	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 	opacity: 0;
 	transition: opacity 0.3s ease-in-out;
@@ -95,7 +102,7 @@
 	position: relative;
 	display: inline-block;
 	cursor: pointer;
-	padding: 8px 4px;
+	padding: 24px 10px;
 	text-align: center;
 	transition: color 0.3s ease;
   }
@@ -110,12 +117,17 @@
   
   .word-wrapper.active .translation {
 	color: #f43b03 !important;
-	border-top: 1px solid black !important;
+	font-family: "Noto Nastaliq Urdu", serif;
+	word-spacing: 3px;
+	font-weight: 600;
+	padding: 4px;
   }
   
   .translation {
 	color: #ffffff;
 	border-top: 1px solid white;
+	font-family: "Noto Nastaliq Urdu", serif;
+	word-spacing: 3px;
   }
   
   .relative.inline-block.w-full.text-center:hover .translation {
@@ -125,7 +137,7 @@
   
   ::v-deep .arabic {
 	display: block;
-	font-size: 30px;
+	font-size: 44px;
 	font-weight: 500;
 	color: #333;
 	font-family: Arabic !important;
