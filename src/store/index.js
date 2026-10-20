@@ -2,13 +2,14 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-  },
-  getters: {
+    slateWord: null // word sent from Quran view to Teaching Slate
   },
   mutations: {
-  },
-  actions: {
-  },
-  modules: {
+    setSlateWord(state, word) {
+      state.slateWord = word;
+    },
+    clearSlateWord(state) {
+      state.slateWord = null;
+    }
   }
 })
